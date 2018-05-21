@@ -1,14 +1,9 @@
-repo-for-visualcode:
-  cmd.run:
-    - name: sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+visualcode_repo:
+  file.managed:
+    - source: salt://repos/vscode.repo
+    - name: /etc/zypp/repos.d/vscode.repo
 
-repo-content-for-visualcode:
-  cmd.run:
-    - name: sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/zypp/repos.d/vscode.repo'
-    - require:
-      - cmd: repo-for-visualcode
-
-installed-packages:
+installed_packages:
   pkg.installed:
     - names:
       - vim
@@ -19,4 +14,4 @@ installed-packages:
       - MozillaThunderbird
       - skypeforlinux
     - require:
-      - cmd: repo-content-for-visualcode
+      - file: visualcode_repo
